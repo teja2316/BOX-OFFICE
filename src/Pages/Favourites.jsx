@@ -1,12 +1,10 @@
-import React from 'react'
+import React from 'react';
+import Mainpagelayout from '../Componenets/Mainpagelayout';
 
 
 const Orders = () => {
   return (
-    <div>
-   
-   Favourites
-    </div>
+    <Mainpagelayout> Favourites it is</Mainpagelayout>
   )
 }
 
