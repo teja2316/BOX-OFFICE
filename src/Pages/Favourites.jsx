@@ -2,10 +2,10 @@ import React from 'react';
 import Mainpagelayout from '../Componenets/Mainpagelayout';
 
 
-const Orders = () => {
+const Favourites = () => {
   return (
     <Mainpagelayout> Favourites it is</Mainpagelayout>
   )
 }
 
-export default Orders
+export default Favourites

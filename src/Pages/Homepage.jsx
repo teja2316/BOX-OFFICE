@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
 import Mainpagelayout from '../Componenets/Mainpagelayout';
+import { apiGET } from '../misc/config';
 
 const Homepage = () => {
   const [input, setInput] = useState('');
+  const [results, setResults] = useState(null);
 
   const onSearch = () => {
-    fetch(`https://api.tvmaze.com/search/people?q=${input}`)
-      .then(res => res.json())
-      .then(result => {
-        console.log(result);
-      });
+    apiGET(`/search/shows?q=${input}`).then(result => {
+      setResults(result);
+      console.log(result);
+    });
   };
 
   const onKeyDown = e => {
@@ -18,6 +19,21 @@ const Homepage = () => {
     }
   };
 
+  const renderResults = () => {
+    if (results && results.length === 0) {
+      return <div>No Match Found</div>;
+    }
+    if (results && results.length > 0) {
+      return (
+        <div>
+          {results.map(item => (
+            <div key={item.show.id}>{item.show.name}</div>
+          ))}
+        </div>
+      );
+    }
+    return null;
+  };
   return (
     <Mainpagelayout>
       <input
@@ -29,6 +45,7 @@ const Homepage = () => {
       <button type="button" onClick={onSearch}>
         search
       </button>
+      {renderResults()}
     </Mainpagelayout>
   );
 };
