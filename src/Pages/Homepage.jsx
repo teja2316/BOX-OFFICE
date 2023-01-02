@@ -26,7 +26,7 @@ const Homepage = () => {
   const onRadioChage = e => {
     setSearchOption(e.target.value);
   };
-  console.log(searchOption);
+  // console.log(searchOption);
 
   const renderResults = () => {
     if (results && results.length === 0) {
