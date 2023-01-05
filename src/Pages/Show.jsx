@@ -1,52 +1,65 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useReducer } from 'react';
 import { useParams } from 'react-router-dom';
 import { apiGET } from '../misc/config';
 
+const reducer = (prevState, action) => {
+  switch (action.type) {
+    case 'FETCH_SUCCESS': {
+      return { isLoading: false, error: null, show: action.show };
+    }
+
+    case 'FETCH_FAILED': {
+      return { ...prevState, isLoading: false, error: action.error };
+    }
+
+    default:
+      return prevState;
+  }
+};
+
+const initialState = {
+  show: null,
+  isLoading: true,
+  error: null,
+};
 
 const Show = () => {
-    const { id } = useParams();
+  const { id } = useParams();
 
-    const [show, setShow] = useState(null);
-    const [isLoading, setIsLoading] = useState(true);
-    const [error, setError] = useState(null);
+  const [{show, isLoading, error}, dispatch] = useReducer(reducer, initialState);
 
-    useEffect(()=>{
-      
-      let isMounted = true;
+  
 
-      apiGET(`/shows/${id}?embed[]=seasons&embed[]=cast`)
+  useEffect(() => {
+    let isMounted = true;
+
+    apiGET(`/shows/${id}?embed[]=seasons&embed[]=cast`)
       .then(results => {
-        if(isMounted){
-          setShow(results)
-          setIsLoading(false)
+        if (isMounted) {
+          dispatch({ type: 'FETCH_SUCCESS', show: results });
         }
-      }).catch(err => { 
-        if(isMounted){
-          setError(err.message);
-          setIsLoading(false);
-        }        
-     });
+      })
+      .catch(err => {
+        if (isMounted) {
+          dispatch({ type: 'FETCH_FAILED', error: err.message });
+        }
+      });
 
-     return ()=> {
+    return () => {
       isMounted = false;
-     }
+    };
+  }, [id]);
 
-    },[id]);
+  console.log(show);
 
-    console.log(show);
+  if(isLoading){
+   return <div>Data is being loaded</div>
+  }
 
-    if(isLoading){
-      return <div>Data is being loaded</div>
-    }
+  if(error){
+    return <div> Error Occured: {error} </div>
+  }
+  return <div>read more page</div>;
+};
 
-    if(error){
-      return <div> Error Occured: {error} </div>
-    }
-  return (
-    <div>
-          read more page
-    </div>
-  )
-}
-
-export default Show
+export default Show;
