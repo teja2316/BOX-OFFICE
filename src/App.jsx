@@ -10,7 +10,7 @@ function App() {
     <div>
       <Routes>
         <Route path="/" element={<Homepage />} />
-        <Route path="/orders" element={<Favourites />} />
+        <Route path="/favourites" element={<Favourites />} />
         <Route path="*" element={<Pagenotfound />} />
         <Route path='/show/:id' element={<Show />} />
       </Routes>

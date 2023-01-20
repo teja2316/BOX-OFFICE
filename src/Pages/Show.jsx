@@ -1,6 +1,6 @@
 import React, { useEffect, useReducer } from 'react';
 import { useParams } from 'react-router-dom';
-import { apiGET } from '../misc/config';
+import { apiGet } from '../misc/config';
 import ShowMainData from '../Componenets/show/ShowMainData';
 import Details from '../Componenets/show/Details';
 import Season from '../Componenets/show/Season';
@@ -39,7 +39,7 @@ const Show = () => {
   useEffect(() => {
     let isMounted = true;
 
-    apiGET(`/shows/${id}?embed[]=seasons&embed[]=cast`)
+    apiGet(`/shows/${id}?embed[]=seasons&embed[]=cast`)
       .then(results => {
         if (isMounted) {
           dispatch({ type: 'FETCH_SUCCESS', show: results });
