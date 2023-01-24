@@ -1,17 +1,22 @@
 import React, { useState } from 'react';
 import ActorGrid from '../Componenets/actor/ActorGrid';
+import CustomRadio from '../Componenets/CustomRadio';
 import Mainpagelayout from '../Componenets/Mainpagelayout';
 import ShowGrid from '../Componenets/show/ShowGrid';
 import { apiGet } from '../misc/config';
 import { useLastQuery } from '../misc/custom-hooks';
+import {
+  RadioInputsWrapper,
+  SearchButtonWrapper,
+  SearchInput,
+} from './Homepage.styled';
 
 const Homepage = () => {
   const [input, setInput] = useLastQuery();
   const [results, setResults] = useState(null);
   const [searchOption, setSearchOption] = useState('shows');
 
-  const isShowaSearch = searchOption === 'shows';
-  
+  const isShowsSearch = searchOption === 'shows';
 
   const onSearch = () => {
     apiGet(`/search/${searchOption}?q=${input}`).then(result => {
@@ -36,48 +41,52 @@ const Homepage = () => {
     }
 
     if (results && results.length > 0) {
-      return results[0].show ? (<ShowGrid data={results} />) : (<ActorGrid data={results} />) ;
+      return results[0].show ? (
+        <ShowGrid data={results} />
+      ) : (
+        <ActorGrid data={results} />
+      );
     }
     return null;
   };
 
   return (
     <Mainpagelayout>
-      <input
+      <SearchInput
         type="text"
         placeholder="search for something"
-        onChange={e => setInput(e.target.value)}
-        value={input}
+        onChange={e => setInput(e.target.value)}        
         onKeyDown={onKeyDown}
+        value={input} 
       />
 
-      <div>
-        <label htmlFor="shows-search">
-          <input
+      <RadioInputsWrapper>
+        <div>
+          <CustomRadio
+            label="Shows"
             id="shows-search"
-            type="radio"
             value="shows"
-            checked={isShowaSearch}
+            checked={isShowsSearch}
             onChange={onRadioChage}
           />
-          Shows
-        </label>
+        </div>
 
-        <label htmlFor="actors-search">
-          <input
+        <div>
+          <CustomRadio
+            label="Actors"
             id="actors-search"
-            type="radio"
             value="people"
-            checked={!isShowaSearch}
+            checked={!isShowsSearch}
             onChange={onRadioChage}
           />
-          Actors
-        </label>
-      </div>
+        </div>
+      </RadioInputsWrapper>
 
-      <button type="button" onClick={onSearch}>
-        search
-      </button>
+      <SearchButtonWrapper>
+        <button type="button" onClick={onSearch}>
+          search
+        </button>
+      </SearchButtonWrapper>
       {renderResults()}
     </Mainpagelayout>
   );
